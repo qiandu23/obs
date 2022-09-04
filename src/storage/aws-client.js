@@ -60,11 +60,19 @@ class AwsClient {
     }, (err, data) => callback(err, data))
   }
 
+  createObject(bucketName, objectName, content, callback) {
+    this._s3.upload({
+      Bucket: bucketName,
+      Key: objectName,
+      Body: content
+    }, (err, data) => callback(err, data))
+  }
+
   deleteObject(bucketName, objectName, callback) {
     this._s3.deleteObject({
       Bucket: bucketName,
       Key: objectName,
-    }, (err) => callback(err))
+    }, (err, data) => callback(err, data))
   }
 
   getDownloadUrl(bucketName, objectName, callback, originalFilename = '') {

@@ -54,7 +54,7 @@ describe('aws client function test',
       })
     })
 
-    it('create and delete bucket', function (done) {
+    it('create and delete bucket, meanwhile create,head and delete object', function (done) {
       this.timeout(0)
       async.waterfall([
         cb => storage.getStorageInfo(storageName, adminId, (err, info) => {
@@ -64,6 +64,30 @@ describe('aws client function test',
         (info, cb) => {
           const awsClient = new AWSClient(info)
           awsClient.createBucket(bucketName, (err, data) => {
+            if (err) return cb(err)
+            logger.info(data)
+            cb(null, info)
+          })
+        },
+        (info, cb) => {
+          const awsClient = new AWSClient(info)
+          awsClient.createObject(bucketName, 'test.txt', Buffer.from('12345'), (err, data) => {
+            if (err) return cb(err)
+            logger.info(data)
+            cb(null, info)
+          })
+        },
+        (info, cb) => {
+          const awsClient = new AWSClient(info)
+          awsClient.headObject(bucketName, 'test.txt', (err, data) => {
+            if (err) return cb(err)
+            logger.info(data)
+            cb(null, info)
+          })
+        },
+        (info, cb) => {
+          const awsClient = new AWSClient(info)
+          awsClient.deleteObject(bucketName, 'test.txt', (err, data) => {
             if (err) return cb(err)
             logger.info(data)
             cb(null, info)
