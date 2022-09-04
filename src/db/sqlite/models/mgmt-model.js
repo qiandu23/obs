@@ -85,6 +85,12 @@ class MgmtModel {
         allowNull: false,
         field: 'secret_key',
       },
+      region: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        field: 'region',
+        defaultValue: '',
+      },
       updateId: {
         type: DataTypes.STRING(36),
         allowNull: false,

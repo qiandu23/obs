@@ -35,17 +35,17 @@ describe('storage table function test', function () {
 
   it('create,get,update,list and delete storage', function (done) {
     this.timeout(0)
-    const {name, endpoint, accessKey, secretKey} = storageInfo
+    const {name, endpoint, accessKey, secretKey, region} = storageInfo
     let id = ''
     async.waterfall([
-      cb => storage.createStorage(name, endpoint, accessKey, secretKey, constants.adminId, err => cb(err)),
+      cb => storage.createStorage(name, endpoint, accessKey, secretKey, region, constants.adminId, err => cb(err)),
       cb => storage.getStorageInfo(name, adminId, (err, info) => {
         if (err) return cb(err)
         logger.info(info)
         id = info.id
         cb(null)
       }),
-      (cb) => storage.updateStorage(id, name, accessKey, 'ChangeMe',
+      (cb) => storage.updateStorage(id, name, accessKey, 'ChangeMe', region,
         constants.adminId, err => cb(err)),
       cb => storage.listStorage(adminId, (err, list) => {
         if (err) return cb(err)

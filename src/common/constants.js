@@ -111,6 +111,7 @@ module.exports = {
     name: 'test storage',
     endpoint: 'http://localhost:9000',
     accessKey: 'test',
-    secretKey: 'test_test'
+    secretKey: 'test_test',
+    region:'us-east-1'
   }
 }

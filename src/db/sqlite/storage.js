@@ -13,7 +13,7 @@ class Storage {
     }).getStorageModel()
   }
 
-  createStorage(name, endpoint, accessKey, secretKey, updateId, callback) {
+  createStorage(name, endpoint, accessKey, secretKey, region, updateId, callback) {
     const self = this
     accessKey = encrypt(accessKey)
     secretKey = encrypt(secretKey)
@@ -35,13 +35,13 @@ class Storage {
       },
       cb => {
         self._storageModel.create({
-          name, endpoint, accessKey, secretKey, updateId,
+          name, endpoint, accessKey, secretKey, region, updateId,
         }).then(() => cb(null)).catch(err => cb(err))
       }
     ], err => callback(err))
   }
 
-  updateStorage(id, endpoint, accessKey, secretKey, updateId, callback) {
+  updateStorage(id, endpoint, accessKey, secretKey, region, updateId, callback) {
     const self = this
     accessKey = encrypt(accessKey)
     secretKey = encrypt(secretKey)
@@ -63,7 +63,7 @@ class Storage {
       },
       cb => {
         self._storageModel.update({
-          endpoint, accessKey, secretKey, updateId,
+          endpoint, accessKey, secretKey, region, updateId,
         }, {
           where: {
             id
@@ -152,10 +152,10 @@ class Storage {
       if (err) return callback(err)
       let newList = []
       _.forEach(list, function (info) {
-        let {id, name, endpoint, accessKey, secretKey} = info
+        let {id, name, endpoint, accessKey, secretKey, region} = info
         accessKey = decrypt(accessKey)
         secretKey = decrypt(secretKey)
-        newList.push({id, name, endpoint, accessKey, secretKey})
+        newList.push({id, name, endpoint, accessKey, secretKey, region})
       })
       callback(null, newList)
     })

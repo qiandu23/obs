@@ -71,10 +71,11 @@ class StorageController {
   createStorage(req, res) {
     const self = this
     let isAuth = false
-    const {name, endpoint, accessKey, secretKey} = req.body
+    let {name, endpoint, accessKey, secretKey, region} = req.body
 
     const flag = self.commonValid(res, name, endpoint, accessKey, secretKey)
     if (!flag) return
+    if (!region) region = ''
 
     async.waterfall([
       cb => {
@@ -89,7 +90,7 @@ class StorageController {
         })
       },
       (accountId, cb) => {
-        self._storage.createStorage(name, endpoint, accessKey, secretKey, accountId,
+        self._storage.createStorage(name, endpoint, accessKey, secretKey, region, accountId,
           (err) => cb(err))
       }
     ], (err) => {
@@ -106,13 +107,14 @@ class StorageController {
   updateStorage(req, res) {
     const self = this
     let isAuth = false
-    const {id, name, endpoint, accessKey, secretKey} = req.body
+    let {id, name, endpoint, accessKey, secretKey, region} = req.body
     if (!id) {
       return utils.errorResponse(res, httpCode.BadRequestError, 'storage id is empty')
     }
 
     const flag = self.commonValid(res, name, endpoint, accessKey, secretKey)
     if (!flag) return
+    if (!region) region = ''
 
     async.waterfall([
       cb => {
@@ -128,7 +130,7 @@ class StorageController {
         })
       },
       (accountId, cb) => {
-        self._storage.updateStorage(id, endpoint, accessKey, secretKey, accountId, (err) => cb(err))
+        self._storage.updateStorage(id, endpoint, accessKey, secretKey, region, accountId, (err) => cb(err))
       }
     ], (err) => {
       if (err) {

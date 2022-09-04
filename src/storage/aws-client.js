@@ -1,59 +1,55 @@
 const AWS = require('aws-sdk')
 const async = require('async')
-const {second, storageInfo, dogInfo} = require('../common/constants')
-const fs = require('fs')
-const fsExtra = require('fs-extra')
-const path = require('path')
+const {second} = require('../common/constants')
 const _ = require('lodash')
 
 class AwsClient {
-  constructor(options = {}, isInternal = false, isDog = false) {
-    if (isDog) {
-      this._s3 = new AWS.S3({
-        apiVersion: '2006-03-01',
-        endpoint: dogInfo.endpoint,
-        s3ForcePathStyle: true,
-        accessKeyId: dogInfo.accessKey,
-        secretAccessKey: dogInfo.secretKey,
-        httpOptions: {
-          timeout: 15 * second,
-          connectTimeout: 5 * second,
-        }
-      })
-    } else {
-      this._s3 = new AWS.S3({
-        apiVersion: '2006-03-01',
-        endpoint: !isInternal ? storageInfo.endpoint : storageInfo.internalEndpoint,
-        s3ForcePathStyle: true,
-        accessKeyId: storageInfo.accessKey,
-        secretAccessKey: storageInfo.secretKey,
-        httpOptions: {
-          timeout: 15 * second,
-          connectTimeout: 5 * second,
-        }
-      })
+  constructor(options = {}) {
+    let params = {
+      apiVersion: '2006-03-01',
+      endpoint: options.endpoint,
+      accessKeyId: options.accessKey,
+      secretAccessKey: options.secretKey,
+      httpOptions: {
+        timeout: 15 * second,
+        connectTimeout: 5 * second,
+      }
     }
 
-    this._logger = options.logger
+    if (options.region) {
+      params.region = options.region
+    } else {
+      params.s3ForcePathStyle = true
+    }
+
+    this._s3 = new AWS.S3(params)
   }
 
-  downloadObject(bucketName, objectName, downloadPath, downloadName, callback) {
+  listBuckets(callback) {
     const self = this
-    fsExtra.ensureDirSync(downloadPath)
-    async.waterfall([
-      cb => {
-        self._s3.getObject({Bucket: bucketName, Key: objectName}, (err, data) => {
-          if (err) return cb(err)
-          cb(null, data.Body)
-        })
-      },
-      (data, cb) => {
-        const fileName = path.resolve(downloadPath, downloadName)
-        fsExtra.outputFile(fileName, data).then(() => cb()).catch(err => cb(err))
-      }
-    ], err => {
+    self._s3.listBuckets((err, data) => {
       if (err) return callback(err)
-      callback()
+      callback(null, data)
+    })
+  }
+
+  createBucket(bucketName, callback) {
+    const self = this
+    self._s3.createBucket({
+      Bucket: bucketName
+    }, (err, data) => {
+      if (err) return callback(err)
+      callback(null, data)
+    })
+  }
+
+  deleteBucket(bucketName, callback) {
+    const self = this
+    self._s3.deleteBucket({
+      Bucket: bucketName
+    }, (err, data) => {
+      if (err) return callback(err)
+      callback(null, data)
     })
   }
 
@@ -90,14 +86,6 @@ class AwsClient {
       Key: objectName,
       ContentType: 'application/octet-stream'
     }, (err, url) => callback(err, url))
-  }
-
-  putObject(bucketName, objectName, uploadFile, callback) {
-    this._s3.putObject({
-      Bucket: bucketName,
-      Key: objectName,
-      Body: fs.createReadStream(uploadFile)
-    }, err => callback(err))
   }
 
   listObjects(bucketName, callback) {
