@@ -124,10 +124,10 @@ class Storage {
       },
     ], (err, storage) => {
       if (err) return callback(err)
-      let {id, name, endpoint, accessKey, secretKey} = storage
+      let {id, name, endpoint, accessKey, secretKey, region} = storage
       accessKey = decrypt(accessKey)
       secretKey = decrypt(secretKey)
-      callback(null, {id, name, endpoint, accessKey, secretKey})
+      callback(null, {id, name, endpoint, accessKey, secretKey, region})
     })
   }
 

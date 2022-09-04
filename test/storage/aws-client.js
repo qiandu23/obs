@@ -44,8 +44,11 @@ describe('aws client function test',
           const awsClient = new AWSClient(info)
           awsClient.listBuckets((err, data) => cb(err, data))
         }
-      ], (list, err) => {
-        if (err) logger.error(err)
+      ], (err, list) => {
+        if (err) {
+          logger.error(err)
+          return
+        }
         logger.info(list)
         done()
       })
