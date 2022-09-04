@@ -1,7 +1,7 @@
 const svcName = 'object-storage-browser'
 const adminId = '6301e4e7-5416-4def-845e-8dce7d0ec9c7'
 const adminName = 'obs-admin'
-const adminPassword = '442cbf3fdf0f24777036e660c32d6e4b5f7621231bff2754673c5a188a2f614a'
+const adminPassword = '95bca9ba6442524254fbd546301d573a4692ea1e2499a8bf23fb0fbc10980fdb'
 const millisecond = 1
 const second = millisecond * 1000
 const serverInfo = {

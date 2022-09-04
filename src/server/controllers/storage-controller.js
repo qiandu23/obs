@@ -18,20 +18,26 @@ class StorageController {
 
   commonValid(res, name, endpoint, accessKey, secretKey) {
     if (!name) {
-      return utils.errorResponse(res, httpCode.BadRequestError, 'storage name is empty')
+      utils.errorResponse(res, httpCode.BadRequestError, 'storage name is empty')
+      return false
     }
 
     if (!endpoint) {
-      return utils.errorResponse(res, httpCode.BadRequestError, 'storage endpoint is empty')
+      utils.errorResponse(res, httpCode.BadRequestError, 'storage endpoint is empty')
+      return false
     }
 
     if (!accessKey) {
-      return utils.errorResponse(res, httpCode.BadRequestError, 'storage accessKey is empty')
+      utils.errorResponse(res, httpCode.BadRequestError, 'storage accessKey is empty')
+      return false
     }
 
     if (!secretKey) {
-      return utils.errorResponse(res, httpCode.BadRequestError, 'storage secretKey is empty')
+      utils.errorResponse(res, httpCode.BadRequestError, 'storage secretKey is empty')
+      return false
     }
+
+    return true
   }
 
   listStorage(req, res) {
@@ -67,7 +73,8 @@ class StorageController {
     let isAuth = false
     const {name, endpoint, accessKey, secretKey} = req.body
 
-    self.commonValid(res, name, endpoint, accessKey, secretKey)
+    const flag = self.commonValid(res, name, endpoint, accessKey, secretKey)
+    if (!flag) return
 
     async.waterfall([
       cb => {
@@ -104,7 +111,8 @@ class StorageController {
       return utils.errorResponse(res, httpCode.BadRequestError, 'storage id is empty')
     }
 
-    self.commonValid(res, name, endpoint, accessKey, secretKey)
+    const flag = self.commonValid(res, name, endpoint, accessKey, secretKey)
+    if (!flag) return
 
     async.waterfall([
       cb => {
