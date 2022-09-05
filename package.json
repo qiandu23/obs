@@ -6,8 +6,9 @@
     "check": "eslint bin/** src/** test/**",
     "test": "nyc mocha --recursive",
     "api-server": "node bin/command.js start-api",
-    "build-linux": "pkg . --targets node16-linux-x64 --output obs-browser",
-    "build-macos": "pkg . --targets node16-macos-x64 --output obs-browser"
+    "build-linux": "pkg . --targets node14-linux-x64 --output obs-browser",
+    "build-macos": "pkg . --targets node14-macos-x64 --output obs-browser",
+    "build-win": "pkg . --targets node14-win-x64 --output obs-browser.exe"
   },
   "author": "org-qiandu",
   "license": "MIT",
