@@ -1,7 +1,5 @@
 const AWS = require('aws-sdk')
-const async = require('async')
 const {second} = require('../common/constants')
-const _ = require('lodash')
 
 class AwsClient {
   constructor(options = {}) {
