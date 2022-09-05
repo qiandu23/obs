@@ -19,6 +19,9 @@
     ],
     "output": [
       "obs-browser"
+    ],
+    "assets": [
+      "./node_modules/sqlite3/**/*"
     ]
   },
   "dependencies": {
