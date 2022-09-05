@@ -112,3 +112,5 @@ package-lock.json
 *.db
 
 object-storage-browser.sqlite
+
+obs-browser.exe
