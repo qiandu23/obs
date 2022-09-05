@@ -107,8 +107,6 @@ dist
 
 package-lock.json
 
-version.json
-
 .DS_Store
 
 *.db
