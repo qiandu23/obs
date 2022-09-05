@@ -1,7 +1,7 @@
 const async = require('async')
 const {Op} = require('sequelize')
 const MgmtModel = require('./models/mgmt-model')
-const {encrypt, decrypt} = require('../../common/utils')
+const utils = require('../../common/utils')
 const _ = require('lodash')
 
 class Storage {
@@ -15,8 +15,8 @@ class Storage {
 
   createStorage(name, endpoint, accessKey, secretKey, region, updateId, callback) {
     const self = this
-    accessKey = encrypt(accessKey)
-    secretKey = encrypt(secretKey)
+    accessKey = utils.encrypt(accessKey)
+    secretKey = utils.encrypt(secretKey)
     async.waterfall([
       cb => {
         self._storageModel.findAll({
@@ -43,8 +43,8 @@ class Storage {
 
   updateStorage(id, endpoint, accessKey, secretKey, region, updateId, callback) {
     const self = this
-    accessKey = encrypt(accessKey)
-    secretKey = encrypt(secretKey)
+    accessKey = utils.encrypt(accessKey)
+    secretKey = utils.encrypt(secretKey)
     async.waterfall([
       cb => {
         self._storageModel.findAll({
@@ -120,13 +120,15 @@ class Storage {
           }
 
           cb(null, storage)
-        }).catch(err => cb(err))
+        }).catch(err => {
+          cb(err)
+        })
       },
     ], (err, storage) => {
       if (err) return callback(err)
       let {id, name, endpoint, accessKey, secretKey, region} = storage
-      accessKey = decrypt(accessKey)
-      secretKey = decrypt(secretKey)
+      accessKey = utils.decrypt(accessKey)
+      secretKey = utils.decrypt(secretKey)
       callback(null, {id, name, endpoint, accessKey, secretKey, region})
     })
   }
@@ -146,15 +148,17 @@ class Storage {
           ]
         }).then(list => {
           cb(null, list)
-        }).catch(err => cb(err))
+        }).catch(err => {
+          cb(err)
+        })
       },
     ], (err, list) => {
       if (err) return callback(err)
       let newList = []
       _.forEach(list, function (info) {
         let {id, name, endpoint, accessKey, secretKey, region} = info
-        accessKey = decrypt(accessKey)
-        secretKey = decrypt(secretKey)
+        accessKey = utils.decrypt(accessKey)
+        secretKey = utils.decrypt(secretKey)
         newList.push({id, name, endpoint, accessKey, secretKey, region})
       })
       callback(null, newList)

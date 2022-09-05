@@ -96,31 +96,19 @@ class AwsClient {
     }, (err, url) => callback(err, url))
   }
 
-  listObjects(bucketName, callback) {
-    let isTruncated = true, list = [], marker = ''
+  listObject(bucketName, prefix, marker, maxKeys, callback) {
     const self = this
-    async.whilst(
-      function test(cb) {
-        cb(null, isTruncated)
-      },
-      function iter(cb) {
-        let params = {Bucket: bucketName}
-        if (marker) {
-          params.Marker = marker
-        }
-        self._s3.listObjects(params, (err, data) => {
-          if (err) return cb(err)
-          isTruncated = data.IsTruncated
-          list = _.concat(list, data.Contents)
-          marker = data.NextMarker
-          cb(null)
-        })
-      },
-      function (err) {
-        callback(err, list)
-      }
-    )
+    let params = {
+      Bucket: bucketName, MaxKeys: maxKeys
+    }
 
+    if (prefix) params.Prefix = prefix
+    if (marker) params.Marker = marker
+    self._s3.listObjects(
+      params,
+      (err, data) => {
+        callback(err, data)
+      })
   }
 }
 

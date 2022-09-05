@@ -7,7 +7,8 @@ const {adminId} = require('../../src/common/constants')
 
 describe('aws client function test',
   function () {
-    let logger, connection, storage, mgmtDb, storageName = 'aliyun-test', bucketName = 'qiandu-test1'
+    let logger, connection, storage, mgmtDb,
+      storageName = 'aliyun-test', bucketName = 'qiandu-test1', objectName = 'test.txt'
     beforeEach(function (done) {
       logger = new Logger()
       connection = new Connection({logger})
@@ -71,7 +72,7 @@ describe('aws client function test',
         },
         (info, cb) => {
           const awsClient = new AWSClient(info)
-          awsClient.createObject(bucketName, 'test.txt', Buffer.from('12345'), (err, data) => {
+          awsClient.createObject(bucketName, objectName, Buffer.from('12345'), (err, data) => {
             if (err) return cb(err)
             logger.info(data)
             cb(null, info)
@@ -79,7 +80,7 @@ describe('aws client function test',
         },
         (info, cb) => {
           const awsClient = new AWSClient(info)
-          awsClient.headObject(bucketName, 'test.txt', (err, data) => {
+          awsClient.headObject(bucketName, objectName, (err, data) => {
             if (err) return cb(err)
             logger.info(data)
             cb(null, info)
@@ -87,7 +88,7 @@ describe('aws client function test',
         },
         (info, cb) => {
           const awsClient = new AWSClient(info)
-          awsClient.deleteObject(bucketName, 'test.txt', (err, data) => {
+          awsClient.deleteObject(bucketName, objectName, (err, data) => {
             if (err) return cb(err)
             logger.info(data)
             cb(null, info)

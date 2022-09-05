@@ -1,11 +1,14 @@
 const crypto = require('crypto')
 const {svcName} = require('./constants')
+const async = require('async')
+const Storage = require('../db/sqlite/storage')
+
 const iv = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,
   0x0e, 0x0f]
 
 const salt = svcName
 
-const encrypt = function (data) {
+const encrypt = (data) => {
   let md5 = crypto.createHash('md5').update(salt).digest('hex')
   const cipher = crypto.createCipheriv(
     'aes-128-cbc', Buffer.from(md5, 'hex'), Buffer.from(iv)
@@ -18,7 +21,7 @@ const encrypt = function (data) {
 
 module.exports.encrypt = encrypt
 
-const decrypt = function (encryptedData) {
+const decrypt = (encryptedData) => {
   try {
     let md5 = crypto.createHash('md5').update(salt).digest('hex')
     const decipher = crypto.createDecipheriv(
@@ -87,4 +90,17 @@ module.exports.formatSize = (size) => {
 
 module.exports.containChinese = (value) => {
   return /.*[\u4e00-\u9fa5]+.*$/.test(value)
+}
+
+module.exports.getAWSClientConfig = (storageName, updateId, mgmtDb, logger, callback) => {
+  const storage = new Storage({
+    mgmtDb, logger
+  })
+
+  storage.getStorageInfo(storageName, updateId, (err, info) => {
+    if (err) {
+      return callback(err)
+    }
+    callback(null, info)
+  })
 }

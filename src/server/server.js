@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const {staticDirectoryList, serverInfo} = require('../common/constants')
 const UserController = require('./controllers/user-controller')
 const StorageController = require('./controllers/storage-controller')
+const BucketController = require('./controllers/bucket-controller')
 const Connection = require('../db/sqlite/connection')
 const Account = require('../db/sqlite/account')
 
@@ -81,6 +82,7 @@ class Server {
     const self = this
     const userController = new UserController({logger: self._logger, mgmtDb: self._mgmtDb})
     const storageController = new StorageController({logger: self._logger, mgmtDb: self._mgmtDb})
+    const bucketController = new BucketController({logger: self._logger, mgmtDb: self._mgmtDb})
 
     app.get('/api/test', userController.helloWorld.bind(userController))
 
@@ -93,9 +95,15 @@ class Server {
     app.post('/api/user/update-token', userController.updateToken.bind(userController))
 
     app.get('/api/storage/list-storage', storageController.listStorage.bind(storageController))
+    app.get('/api/storage/list-storage-names', storageController.listStorageNames.bind(storageController))
     app.post('/api/storage/create-storage', storageController.createStorage.bind(storageController))
     app.put('/api/storage/update-storage', storageController.updateStorage.bind(storageController))
     app.delete('/api/storage/delete-storage', storageController.deleteStorage.bind(storageController))
+
+    app.get('/api/bucket/list-bucket', bucketController.listBucket.bind(bucketController))
+    app.get('/api/bucket/list-object', bucketController.listObject.bind(bucketController))
+    app.post('/api/bucket/create-bucket', bucketController.createBucket.bind(bucketController))
+    app.delete('/api/bucket/delete-bucket', bucketController.deleteBucket.bind(bucketController))
 
     app.use('*', express.static(path.join(self._homeDir, 'dist')))
     callback(null, app)

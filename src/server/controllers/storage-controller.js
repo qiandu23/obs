@@ -1,4 +1,5 @@
 const async = require('async')
+const _ = require('lodash')
 const utils = require('../../common/utils')
 const {httpCode,} = require('../../common/constants')
 const Storage = require('../../db/sqlite/storage')
@@ -58,6 +59,38 @@ class StorageController {
       },
       (accountId, cb) => {
         self._storage.listStorage(accountId, (err, list) => cb(err, list))
+      }
+    ], (err, list) => {
+      if (err) {
+        return utils.errorResponse(res, !isAuth ? httpCode.UnauthorizedError : httpCode.InternalServerError, err.message)
+      }
+
+      utils.okResponse(res, httpCode.OK, list)
+    })
+  }
+
+  listStorageNames(req, res) {
+    const self = this
+    let isAuth = false
+
+    async.waterfall([
+      cb => {
+        utils.authToken(req, self._token, (err, account) => {
+          if (err) {
+            return cb(err)
+          }
+
+          const {id} = account.payload
+          isAuth = true
+          cb(null, id)
+        })
+      },
+      (accountId, cb) => {
+        self._storage.listStorage(accountId, (err, list) => {
+          if (err) return cb(err)
+          list = _.map(list, 'name')
+          cb(null, list)
+        })
       }
     ], (err, list) => {
       if (err) {
