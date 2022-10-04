@@ -214,7 +214,7 @@ class BucketController {
       (client, cb) => {
         client.listObject(name, prefix, marker, Number.parseInt(maxKeys), (err, list) => {
           if (err) return cb(err)
-          const {IsTruncated, Contents} = list
+          const {IsTruncated, Contents, NextMarker, Marker} = list
           const objects = []
           _.forEach(Contents, info => {
             objects.push({
@@ -223,7 +223,7 @@ class BucketController {
               lastModified: info.LastModified
             })
           })
-          cb(null, {isTruncated: IsTruncated, objects})
+          cb(null, {isTruncated: IsTruncated, objects, marker: Marker, nextMarker: NextMarker})
         })
       }
     ], (err, list) => {

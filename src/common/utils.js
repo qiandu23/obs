@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-const {svcName} = require('./constants')
+const {svcName, Byte, KB, MB, GB, TB} = require('./constants')
 const Storage = require('../db/sqlite/storage')
 
 const iv = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,
@@ -102,4 +102,32 @@ module.exports.getAWSClientConfig = (storageName, updateId, mgmtDb, logger, call
     }
     callback(null, info)
   })
+}
+
+module.exports.getRandomLowerCharacter = () => {
+  return String.fromCharCode(Math.floor(Math.random() * 26) + 'a'.charCodeAt(0))
+}
+
+module.exports.getRandomUpperCharacter = () => {
+  return String.fromCharCode(Math.floor(Math.random() * 26) + 'A'.charCodeAt(0))
+}
+
+module.exports.getUnitSize = (unit) => {
+  let size = -1
+  if (unit === 'Byte') {
+    return Byte
+  }
+  if (unit === 'KB') {
+    return KB
+  }
+  if (unit === 'MB') {
+    return MB
+  }
+  if (unit === 'GB') {
+    return GB
+  }
+  if (unit === 'TB') {
+    return TB
+  }
+  return size
 }

@@ -4,6 +4,7 @@ const Storage = require('../../src/db/sqlite/storage')
 const AWSClient = require('../../src/storage/aws-client')
 const async = require('async')
 const {adminId} = require('../../src/common/constants')
+const fs=require('fs')
 
 describe('aws client function test',
   function () {
@@ -72,7 +73,7 @@ describe('aws client function test',
         },
         (info, cb) => {
           const awsClient = new AWSClient(info)
-          awsClient.createObject(bucketName, objectName, Buffer.from('12345'), (err, data) => {
+          awsClient.createObject(bucketName, objectName, fs.createReadStream('5GB.txt'), (err, data) => {
             if (err) return cb(err)
             logger.info(data)
             cb(null, info)

@@ -12,8 +12,14 @@ const serverInfo = {
 
 serverInfo.baseUrl = `${serverInfo.protocol}://${serverInfo.host}:${serverInfo.port}`
 
+const Byte = 1
+const KB = 1024 * Byte
+const MB = 1024 * KB
+const GB = 1024 * MB
+const TB = 1024 * GB
+
 module.exports = {
-  svcName, serverInfo, millisecond, second, adminId, adminName, adminPassword,
+  svcName, serverInfo, millisecond, second, adminId, adminName, adminPassword, Byte, KB, MB, GB, TB,
   jwtSecret: Buffer.from('b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn' +
     'NhAAAAAwEAAQAAAYEAu0qLimYM4CH28lH6Nuj97a8C2YxHMamtcSJNL8FnaP0u4qPss7DD' +
     'KgmGeVLeEL/XJ6vImFZ7RHmXruQRwpya83lgolRKBT6qWeXCqX9aAletTnwBKU7s3AP6+C' +
@@ -112,6 +118,6 @@ module.exports = {
     endpoint: 'http://localhost:9000',
     accessKey: 'test',
     secretKey: 'test_test',
-    region:'us-east-1'
+    region: 'us-east-1'
   }
 }
