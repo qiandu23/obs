@@ -65,15 +65,33 @@ class Server {
     app.use(cors({
       origin: true,
       methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Account', 'Token'],
+      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Account', 'Token', 'X-Custom-Data'],
       credentials: true
     }))
 
     app.use(bodyParser.urlencoded({extended: true}))
     app.use(bodyParser.json())
+
     for (let staticDirectory of staticDirectoryList) {
       app.use(staticDirectory, express.static(path.join(self._homeDir, 'dist')))
     }
+
+    // app.use(function (req, res, next) {
+    //   if (req.headers['content-type'] === 'application/octet-stream') {
+    //     getRawBody(req, {
+    //       length: req.headers['content-length'],
+    //       encoding: req.charset
+    //     }, (err, buffer) => {
+    //       if (err)
+    //         return next(err)
+    //
+    //       req.body = buffer
+    //       next()
+    //     })
+    //   } else {
+    //     next()
+    //   }
+    // })
 
     callback(null, app)
   }
@@ -101,9 +119,13 @@ class Server {
     app.delete('/api/storage/delete-storage', storageController.deleteStorage.bind(storageController))
 
     app.get('/api/bucket/list-bucket', bucketController.listBucket.bind(bucketController))
-    app.get('/api/bucket/list-object', bucketController.listObject.bind(bucketController))
     app.post('/api/bucket/create-bucket', bucketController.createBucket.bind(bucketController))
     app.delete('/api/bucket/delete-bucket', bucketController.deleteBucket.bind(bucketController))
+
+    app.get('/api/bucket/list-object', bucketController.listObject.bind(bucketController))
+    app.put('/api/bucket/put-object', bucketController.putObject.bind(bucketController))
+    app.delete('/api/bucket/delete-object', bucketController.deleteObject.bind(bucketController))
+    app.get('/api/bucket/share-object', bucketController.shareObject.bind(bucketController))
 
     app.use('*', express.static(path.join(self._homeDir, 'dist')))
     callback(null, app)

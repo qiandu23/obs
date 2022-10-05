@@ -58,11 +58,13 @@ class AwsClient {
     }, (err, data) => callback(err, data))
   }
 
-  createObject(bucketName, objectName, content, callback) {
+  createObject(bucketName, objectName, content, type, size, callback) {
     this._s3.upload({
       Bucket: bucketName,
       Key: objectName,
-      Body: content
+      Body: content,
+      ContentType: type,
+      ContentLength: size,
     }, (err, data) => callback(err, data))
   }
 
@@ -83,14 +85,6 @@ class AwsClient {
       Key: objectName,
       ResponseContentDisposition: `attachment; filename ="${originalFilename}"`,
       Expires: 3600 * 6
-    }, (err, url) => callback(err, url))
-  }
-
-  getUploadUrl(bucketName, objectName, callback) {
-    this._s3.getSignedUrl('putObject', {
-      Bucket: bucketName,
-      Key: objectName,
-      ContentType: 'application/octet-stream'
     }, (err, url) => callback(err, url))
   }
 

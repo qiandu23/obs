@@ -41,6 +41,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "pino": "^6.11.3",
+    "raw-body": "^2.5.1",
     "sequelize": "^6.6.5",
     "sqlite3": "^5.0.11",
     "uuid": "^8.3.2"
