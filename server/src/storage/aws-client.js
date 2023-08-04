@@ -1,6 +1,5 @@
 const AWS = require('aws-sdk')
 const {second} = require('../common/constants')
-const {BucketLocationConstraint} = require("aws-sdk/clients/s3");
 
 class AwsClient {
   constructor(options = {}) {
