@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "The browser for object storage",
   "scripts": {
-    "check": "eslint bin/** src/** test/**",
+    "check": "eslint server/bin/** server/src/** server/test/**",
     "test": "nyc mocha --recursive",
     "api-server": "node bin/command.js start-api",
-    "build-linux": "pkg . --targets node14-linux-x64 --output obs-browser",
-    "build-macos": "pkg . --targets node14-macos-x64 --output obs-browser",
-    "build-win": "pkg . --targets node14-win-x64 --output obs-browser.exe"
+    "build-linux": "pkg .. --targets node14-linux-x64 --output obs-browser",
+    "build-macos": "pkg .. --targets node14-macos-x64 --output obs-browser",
+    "build-win": "pkg .. --targets node14-win-x64 --output obs-browser.exe"
   },
   "author": "org-qiandu",
   "license": "MIT",

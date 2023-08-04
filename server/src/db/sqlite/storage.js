@@ -13,7 +13,7 @@ class Storage {
     }).getStorageModel()
   }
 
-  createStorage(name, endpoint, accessKey, secretKey, region, updateId, callback) {
+  createStorage(name, endpoint, accessKey, secretKey, pathStyle, region, updateId, callback) {
     const self = this
     accessKey = utils.encrypt(accessKey)
     secretKey = utils.encrypt(secretKey)
@@ -35,13 +35,13 @@ class Storage {
       },
       cb => {
         self._storageModel.create({
-          name, endpoint, accessKey, secretKey, region, updateId,
+          name, endpoint, accessKey, secretKey, pathStyle, region, updateId,
         }).then(() => cb(null)).catch(err => cb(err))
       }
     ], err => callback(err))
   }
 
-  updateStorage(id, endpoint, accessKey, secretKey, region, updateId, callback) {
+  updateStorage(id, endpoint, accessKey, secretKey, pathStyle, region, updateId, callback) {
     const self = this
     accessKey = utils.encrypt(accessKey)
     secretKey = utils.encrypt(secretKey)
@@ -63,7 +63,7 @@ class Storage {
       },
       cb => {
         self._storageModel.update({
-          endpoint, accessKey, secretKey, region, updateId,
+          endpoint, accessKey, secretKey, pathStyle, region, updateId,
         }, {
           where: {
             id
@@ -125,11 +125,13 @@ class Storage {
         })
       },
     ], (err, storage) => {
-      if (err) return callback(err)
-      let {id, name, endpoint, accessKey, secretKey, region} = storage
+      if (err) {
+        return callback(err)
+      }
+      let {id, name, endpoint, accessKey, secretKey, pathStyle, region} = storage
       accessKey = utils.decrypt(accessKey)
       secretKey = utils.decrypt(secretKey)
-      callback(null, {id, name, endpoint, accessKey, secretKey, region})
+      callback(null, {id, name, endpoint, accessKey, secretKey, pathStyle, region})
     })
   }
 
@@ -156,10 +158,10 @@ class Storage {
       if (err) return callback(err)
       let newList = []
       _.forEach(list, function (info) {
-        let {id, name, endpoint, accessKey, secretKey, region} = info
+        let {id, name, endpoint, accessKey, secretKey, pathStyle, region} = info
         accessKey = utils.decrypt(accessKey)
         secretKey = utils.decrypt(secretKey)
-        newList.push({id, name, endpoint, accessKey, secretKey, region})
+        newList.push({id, name, endpoint, accessKey, secretKey, pathStyle, region})
       })
       callback(null, newList)
     })

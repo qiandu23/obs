@@ -109,7 +109,9 @@ class BucketController {
       (accountId, cb) => {
         const self = this
         utils.getAWSClientConfig(storageName, accountId, self._mgmtDb, self._logger, (err, info) => {
-          if (err) return cb(err)
+          if (err) {
+            return cb(err)
+          }
           cb(null, new AWSClient(info))
         })
       },

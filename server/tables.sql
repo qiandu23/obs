@@ -20,6 +20,7 @@ create table storage
     endpoint    TEXT not null,
     access_key  TEXT not null,
     secret_key  TEXT not null,
+    path_style  INTEGER not null,
     update_id   TEXT not null,
     update_date TEXT not null,
     region      TEXT

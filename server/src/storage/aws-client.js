@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk')
 const {second} = require('../common/constants')
+const {BucketLocationConstraint} = require("aws-sdk/clients/s3");
 
 class AwsClient {
   constructor(options = {}) {
@@ -8,6 +9,7 @@ class AwsClient {
       endpoint: options.endpoint,
       accessKeyId: options.accessKey,
       secretAccessKey: options.secretKey,
+      s3ForcePathStyle: options.pathStyle,
       httpOptions: {
         timeout: 15 * second,
         connectTimeout: 5 * second,
@@ -16,9 +18,10 @@ class AwsClient {
 
     if (options.region) {
       params.region = options.region
-    } else {
-      params.s3ForcePathStyle = true
     }
+
+    this.pathStyle = options.pathStyle
+    this.region = options.region
 
     this._s3 = new AWS.S3(params)
   }
@@ -33,10 +36,18 @@ class AwsClient {
 
   createBucket(bucketName, callback) {
     const self = this
-    self._s3.createBucket({
+    let params = {
       Bucket: bucketName
-    }, (err, data) => {
-      if (err) return callback(err)
+    }
+
+    if (self.pathStyle) {
+      params.CreateBucketConfiguration = {LocationConstraint: self.region}
+    }
+
+    self._s3.createBucket(params, (err, data) => {
+      if (err) {
+        return callback(err)
+      }
       callback(null, data)
     })
   }

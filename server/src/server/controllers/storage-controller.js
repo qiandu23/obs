@@ -17,7 +17,7 @@ class StorageController {
     })
   }
 
-  commonValid(res, name, endpoint, accessKey, secretKey) {
+  commonValid(res, name, endpoint, accessKey, secretKey, pathStyle) {
     if (!name) {
       utils.errorResponse(res, httpCode.BadRequestError, 'storage name is empty')
       return false
@@ -35,6 +35,11 @@ class StorageController {
 
     if (!secretKey) {
       utils.errorResponse(res, httpCode.BadRequestError, 'storage secretKey is empty')
+      return false
+    }
+
+    if (![true, false].includes(pathStyle)) {
+      utils.errorResponse(res, httpCode.BadRequestError, 'storage pathStyle is not true or false')
       return false
     }
 
@@ -104,9 +109,9 @@ class StorageController {
   createStorage(req, res) {
     const self = this
     let isAuth = false
-    let {name, endpoint, accessKey, secretKey, region} = req.body
+    let {name, endpoint, accessKey, secretKey, pathStyle, region} = req.body
 
-    const flag = self.commonValid(res, name, endpoint, accessKey, secretKey)
+    const flag = self.commonValid(res, name, endpoint, accessKey, secretKey, pathStyle)
     if (!flag) return
     if (!region) region = ''
 
@@ -123,7 +128,7 @@ class StorageController {
         })
       },
       (accountId, cb) => {
-        self._storage.createStorage(name, endpoint, accessKey, secretKey, region, accountId,
+        self._storage.createStorage(name, endpoint, accessKey, secretKey, pathStyle, region, accountId,
           (err) => cb(err))
       }
     ], (err) => {
@@ -140,12 +145,12 @@ class StorageController {
   updateStorage(req, res) {
     const self = this
     let isAuth = false
-    let {id, name, endpoint, accessKey, secretKey, region} = req.body
+    let {id, name, endpoint, accessKey, secretKey, pathStyle, region} = req.body
     if (!id) {
       return utils.errorResponse(res, httpCode.BadRequestError, 'storage id is empty')
     }
 
-    const flag = self.commonValid(res, name, endpoint, accessKey, secretKey)
+    const flag = self.commonValid(res, name, endpoint, accessKey, secretKey, pathStyle)
     if (!flag) return
     if (!region) region = ''
 
@@ -163,7 +168,7 @@ class StorageController {
         })
       },
       (accountId, cb) => {
-        self._storage.updateStorage(id, endpoint, accessKey, secretKey, region, accountId, (err) => cb(err))
+        self._storage.updateStorage(id, endpoint, accessKey, secretKey, pathStyle, region, accountId, (err) => cb(err))
       }
     ], (err) => {
       if (err) {

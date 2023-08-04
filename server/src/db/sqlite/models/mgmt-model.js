@@ -85,6 +85,11 @@ class MgmtModel {
         allowNull: false,
         field: 'secret_key',
       },
+      pathStyle: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        field: 'path_style',
+      },
       region: {
         type: DataTypes.STRING(100),
         allowNull: false,
