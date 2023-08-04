@@ -26,6 +26,3 @@ create table storage
     region      TEXT
 );
 
-create unique index sqlite_autoindex_storage_1
-    on storage (id);
-

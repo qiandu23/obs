@@ -40,7 +40,7 @@ class AwsClient {
       Bucket: bucketName
     }
 
-    if (self.pathStyle) {
+    if (self.pathStyle && self.region) {
       params.CreateBucketConfiguration = {LocationConstraint: self.region}
     }
 
