@@ -10,5 +10,3 @@ start() {
 }
 
 start
-
-exec "$@"

@@ -1,4 +1,4 @@
-create table account
+create table if not exists account
 (
     id          TEXT    not null
         primary key,
@@ -11,7 +11,7 @@ create table account
     update_date TEXT    not null
 );
 
-create table storage
+create table if not exists  storage
 (
     id          TEXT not null,
     name        TEXT not null
