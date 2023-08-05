@@ -16,7 +16,7 @@ get_version() {
 
 build() {
     echo "Compiling ${NAME}-${VERSION} server"
-    (cd server && rm -rf node_modules && npm i --production && pkg -t node14-alpine-x64 .)
+    (cd server && rm -rf node_modules && npm i --production && pkg -t node18-linux-x64 -o obs-ui .)
     echo "Compiling ${NAME}-${VERSION} ui"
     (cd ui && rm -rf dist && npm i && npm run build)
     (rm -rf obs-ui dist && cp -rf server/obs-ui . && cp -rf ui/dist .)

@@ -1,4 +1,4 @@
-FROM alpine:3.18.2
+FROM debian:buster-slim
 
 WORKDIR /obs-browser
 
@@ -9,7 +9,7 @@ COPY ./docker/tables.sql /obs-browser
 COPY ./obs-ui /obs-browser
 COPY ./dist /obs-browser
 
-RUN apk add sqlite
+RUN apt update && apt install -y sqlite3
 RUN sqlite3 object-storage-browser.sqlite < tables.sql
 RUN chmod +x obs-ui && chmod +x /entry.sh
 
