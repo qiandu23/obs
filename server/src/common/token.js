@@ -1,5 +1,4 @@
-const {SignJWT} = require('jose/jwt/sign')
-const {jwtVerify} = require('jose/jwt/verify')
+const jose = require('jose')
 const {jwtSecret, svcName} = require('./constants')
 
 class Token {
@@ -10,7 +9,7 @@ class Token {
 
   signJWT(id, username, isAdmin, accessList, expireTime, callback) {
     const self = this
-    new SignJWT({id, username, isAdmin, accessList})
+    new jose.SignJWT({id, username, isAdmin, accessList})
       .setProtectedHeader({alg: 'HS256'})
       .setIssuedAt()
       .setIssuer(self._issuer)
@@ -21,7 +20,7 @@ class Token {
 
   verifyJWT(jwt, username, callback) {
     const self = this
-    jwtVerify(jwt, jwtSecret, {
+    jose.jwtVerify(jwt, jwtSecret, {
       issuer: self._issuer,
       audience: username
     }).then(info => callback(null, info)).catch(err => {
