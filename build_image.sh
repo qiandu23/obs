@@ -14,11 +14,11 @@ get_version() {
 }
 
 npm_build(){
-  if [ -f "package-lock.json" ]; then
-    rm package-lock.json
-  fi
-
   if [ ! -d "node_modules" ]; then
+    if [ -f "package-lock.json" ]; then
+      rm package-lock.json
+    fi
+
     npm i
   fi
 }
