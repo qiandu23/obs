@@ -20,8 +20,8 @@ build() {
     echo "Compiling ${NAME}-${VERSION} ui"
     (cd ui && rm -rf dist && rm -rf package-lock.json && npm i && npm run build)
     (rm -rf obs-ui dist && cp -rf server/obs-ui . && cp -rf ui/dist .)
-    docker build -t ${NAME}:${VERSION} -f ./docker/Dockerfile .
-    docker save ${NAME}:${VERSION} | gzip > ${NAME}-${VERSION}.tgz
+    sudo docker build -t ${NAME}:${VERSION} -f ./docker/Dockerfile .
+    sudo docker save ${NAME}:${VERSION} | gzip > ${NAME}-${VERSION}.tgz
 }
 
 get_version
