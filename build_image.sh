@@ -13,12 +13,22 @@ get_version() {
     echo "Current version: ${VERSION}"
 }
 
+npm_build(){
+  if [ -f "package-lock.json" ]; then
+    rm package-lock.json
+  fi
+
+  if [ ! -d "node_modules" ]; then
+    npm i
+  fi
+}
+
 
 build() {
     echo "Compiling ${NAME}-${VERSION} server"
-    (cd server && rm -rf node_modules && rm -rf package-lock.json && npm i --production && pkg -t node14-linux-x64 -o obs-ui .)
+    (cd server && npm_build && pkg -t node14-linux-x64 -o obs-ui .)
     echo "Compiling ${NAME}-${VERSION} ui"
-    (cd ui && rm -rf dist && rm -rf package-lock.json && npm i && npm run build)
+    (cd ui && rm -rf dist && npm_build && npm run build)
     (rm -rf obs-ui dist && cp -rf server/obs-ui . && cp -rf ui/dist .)
     sudo docker build -t ${NAME}:${VERSION} -f ./docker/Dockerfile .
     sudo docker save ${NAME}:${VERSION} | gzip > ${NAME}-${VERSION}.tgz
