@@ -21,6 +21,7 @@
       "obs-ui"
     ],
     "assets": [
+      "./node_modules/sqlite3/**/*"
     ]
   },
   "dependencies": {

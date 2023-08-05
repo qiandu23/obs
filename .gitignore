@@ -120,3 +120,5 @@ obs-browser.exe
 version.json
 
 obs-ui
+
+server/object-storage-browser
