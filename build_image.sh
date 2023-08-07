@@ -5,11 +5,11 @@ VERSION=
 NAME=obs-ui
 
 get_version() {
-    major=1.0
+    major=1
     build=$(git rev-list HEAD --count)
     head=$(git rev-list HEAD -n 1 | cut -c 1-7 | xargs)
-    VERSION=${major}.${build}.${head}
-    sudo echo "{\"version\": \"$VERSION\"}" > version.json
+    VERSION=${major}.$((build/10)).$((build%10)).${head}
+    echo "{\"version\": \"$VERSION\"}" > version.json
     echo "Current version: ${VERSION}"
 }
 

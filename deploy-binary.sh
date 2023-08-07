@@ -1,7 +1,18 @@
 #!/usr/bin/env sh
 
+version=
 username=obs-ui
 deploy_directory=/usr/local/lib/obs-ui
+lib_directory=obs-ui-lib
+
+get_version() {
+    major=1
+    build=$(git rev-list HEAD --count)
+    head=$(git rev-list HEAD -n 1 | cut -c 1-7 | xargs)
+    version=${major}.$((build/10)).$((build%10)).${head}
+    echo "{\"version\": \"$version\"}" > version.json
+    echo "Current version: ${version}"
+}
 
 create_user(){
   sudo id "$username"
@@ -28,24 +39,66 @@ npm_build(){
 }
 
 build_pkg(){
+  get_version
   (cd server && npm_build && pkg -t node14-linux-x64 -o obs-ui .)
   (cd ui && rm -rf dist && npm_build && npm run build)
   (rm -rf obs-ui dist && cp -rf server/obs-ui . && cp -rf ui/dist .)
+
+  if [ ! -d "$lib_directory" ]; then
+    sudo mkdir -p $lib_directory
+  fi
+
+  if [ ! -d "$lib_directory/dist" ]; then
+    rm -rf "$lib_directory/dist"
+  fi
+
+  cp version.json $lib_directory && sudo cp obs-ui.service $lib_directory && \
+  cp systemd.env $lib_directory && sudo cp obs-ui $lib_directory && \
+  mv dist $lib_directory && sudo cp docker/tables.sql $lib_directory && \
+  tar -czvf "obs-ui-$version.tgz" $lib_directory
+}
+
+deploy_lib(){
+  if [ ! -f "$1" ]; then
+    echo "compress library must be support" && exit
+  fi
 
   if [ ! -d "$deploy_directory" ]; then
     sudo mkdir -p $deploy_directory
   fi
 
-  sudo rm -rf $deploy_directory/dist && sudo cp version.json $deploy_directory && sudo cp systemd.env $deploy_directory &&\
-  sudo cp obs-ui $deploy_directory && sudo mv dist $deploy_directory && sudo cp docker/tables.sql $deploy_directory && \
+  if [ ! -d "$deploy_directory/dist" ]; then
+    sudo rm -rf "$deploy_directory/dist"
+  fi
+
+  sudo tar -xzvf "$1" && \
+  sudo cp "$lib_directory/version.json" $deploy_directory && \
+  sudo cp "$lib_directory/systemd.env" $deploy_directory && sudo cp "$lib_directory/obs-ui" $deploy_directory && \
+  sudo mv "$lib_directory/dist" $deploy_directory && sudo cp "$lib_directory/tables.sql" $deploy_directory && \
   sudo sqlite3 $deploy_directory/object-storage-browser.sqlite < $deploy_directory/tables.sql && \
   sudo chown -R $username:$username $deploy_directory
 }
 
 deploy_systemd(){
-  sudo cp -f obs-ui.service /usr/lib/systemd/system/
+  create_user && \
+  sudo chown -R $username:$username "$deploy_directory/obs-ui.service"
+  sudo cp -f "$deploy_directory/obs-ui.service" /usr/lib/systemd/system/
   sudo systemctl daemon-reload && sudo systemctl restart obs-ui && sudo systemctl enable obs-ui
 }
 
-create_user && build_pkg && deploy_systemd
+command="$1"
 
+case "$command" in
+  build)
+    build_pkg
+    ;;
+  lib)
+    deploy_lib $2
+    ;;
+  systemd)
+    deploy_systemd
+    ;;
+  *)
+    echo "Invalid option, please check option"; exit 1
+    ;;
+esac
