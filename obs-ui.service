@@ -6,7 +6,7 @@ After=network.target
 WorkingDirectory=/usr/local/lib/obs-ui
 EnvironmentFile=/usr/local/lib/obs-ui/systemd.env
 ExecStart=/usr/local/lib/obs-ui/obs-ui start-api
-Restart=on-failure
+Restart=always
 RestartSec=6s
 User=obs-ui
 
