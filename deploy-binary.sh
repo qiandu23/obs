@@ -55,7 +55,8 @@ build_pkg(){
   cp version.json $lib_directory && cp obs-ui.service $lib_directory && \
   cp systemd.env $lib_directory && cp obs-ui $lib_directory && \
   mv dist $lib_directory && cp docker/tables.sql $lib_directory && \
-  tar -czvf "obs-ui-$version.tgz" $lib_directory
+  tar -czvf "obs-ui-$version.tgz" $lib_directory && \
+  rm -rf $lib_directory
 }
 
 deploy_lib(){
