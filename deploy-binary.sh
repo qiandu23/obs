@@ -73,7 +73,7 @@ deploy_lib(){
   fi
 
   sudo tar -xzvf "$1" && \
-  sudo cp "$lib_directory/version.json" $deploy_directory && \
+  sudo cp "$lib_directory/version.json" $deploy_directory && sudo cp "$lib_directory/obs-ui.service" $deploy_directory && \
   sudo cp "$lib_directory/systemd.env" $deploy_directory && sudo cp "$lib_directory/obs-ui" $deploy_directory && \
   sudo mv "$lib_directory/dist" $deploy_directory && sudo cp "$lib_directory/tables.sql" $deploy_directory && \
   sudo sqlite3 $deploy_directory/object-storage-browser.sqlite < $deploy_directory/tables.sql && \
