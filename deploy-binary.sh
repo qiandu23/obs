@@ -44,7 +44,7 @@ build_pkg(){
 
 deploy_systemd(){
   sudo cp -f obs-ui.service /usr/lib/systemd/system/
-  sudo systemctl daemon-reload && sudo systemctl restart obs-ui && sudo enable obs-ui
+  sudo systemctl daemon-reload && sudo systemctl restart obs-ui && sudo systemctl enable obs-ui
 }
 
 create_user && build_pkg && deploy_systemd
