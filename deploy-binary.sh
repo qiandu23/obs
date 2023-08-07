@@ -82,8 +82,8 @@ deploy_lib(){
 
 deploy_systemd(){
   create_user && \
-  sudo chown -R $username:$username "/usr/lib/systemd/system/obs-ui.service"
-  sudo cp -f "$deploy_directory/obs-ui.service" /usr/lib/systemd/system/
+  sudo cp -f "$deploy_directory/obs-ui.service" /usr/lib/systemd/system/ && \
+  sudo chown -R $username:$username "/usr/lib/systemd/system/obs-ui.service" && \
   sudo systemctl daemon-reload && sudo systemctl restart obs-ui && sudo systemctl enable obs-ui
 }
 
