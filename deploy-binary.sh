@@ -35,8 +35,8 @@ build_pkg(){
     sudo mkdir -p $deploy_directory
   fi
 
-  rm -rf $deploy_directory/dist && \
-  cp obs-ui $deploy_directory && mv dist $deploy_directory && cp docker/tables.sql $deploy_directory && \
+  sudo rm -rf $deploy_directory/dist && \
+  sudo cp obs-ui $deploy_directory && sudo mv dist $deploy_directory && sudo cp docker/tables.sql $deploy_directory && \
   sudo sqlite3 $deploy_directory/object-storage-browser.sqlite < $deploy_directory/tables.sql && \
   sudo chown -R $username:$username $deploy_directory
 }
