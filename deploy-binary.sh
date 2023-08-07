@@ -68,7 +68,7 @@ deploy_lib(){
     sudo mkdir -p $deploy_directory
   fi
 
-  if [ ! -d "$deploy_directory/dist" ]; then
+  if [ -d "$deploy_directory/dist" ]; then
     sudo rm -rf "$deploy_directory/dist"
   fi
 
