@@ -4,7 +4,7 @@ username=obs-ui
 deploy_directory=/usr/local/lib/obs-ui
 
 create_user(){
-  sudo id "$username" &> /dev/null && result=$?
+  sudo id "$username" &> /dev/null && result=$? && $result
 
   if [ "x$result" = "x0" ]; then
     echo "Account $username exists."
