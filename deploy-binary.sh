@@ -45,7 +45,7 @@ build_pkg(){
   (rm -rf obs-ui dist && cp -rf server/obs-ui . && cp -rf ui/dist .)
 
   if [ ! -d "$lib_directory" ]; then
-    sudo mkdir -p $lib_directory
+    mkdir -p $lib_directory
   fi
 
   if [ ! -d "$lib_directory/dist" ]; then
