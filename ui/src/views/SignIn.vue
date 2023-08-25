@@ -10,7 +10,8 @@
         </div>
         <el-form>
           <el-form-item label="Account">
-            <el-input v-model="username" placeholder="Please input account" @keypress.native.enter="handleSubmit"></el-input>
+            <el-input v-model="username" placeholder="Please input account"
+                      @keypress.native.enter="handleSubmit"></el-input>
           </el-form-item>
           <el-form-item label="Password">
             <el-input v-model="password" placeholder="Please input password" show-password
@@ -91,7 +92,12 @@ export default {
     if (getToken()) {
       authAccount((err, isAdmin) => {
         if (err) {
-          self.errorMessage = err.message
+          if (err.message && err.message.includes('exp')) {
+            self.errorMessage='login timeout'
+          } else {
+            self.errorMessage = err.message
+          }
+
           self.isShowErrorMessage = true
           removeToken()
           removeAccount()
